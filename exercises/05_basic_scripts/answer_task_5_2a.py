@@ -42,45 +42,47 @@ bin_ip = "00001010000000010000000111000011"
 
 """
 
-ip_addr = input('ввод IP-сети в формате: 10.1.1.0/24 ')
+network = input("Введите адрес сети: ")
 
-ip = ip_addr.split('/')[0].split('.')   # записываем адрес сети или хоста в список ['10', '0', '5', '195']
+ip, mask = network.split("/")
+ip_list = ip.split(".")
+mask = int(mask)
 
-mask = int(ip_addr.split('/')[1])  # маска числом 28
+oct1, oct2, oct3, oct4 = [
+    int(ip_list[0]),
+    int(ip_list[1]),
+    int(ip_list[2]),
+    int(ip_list[3]),
+]
+bin_ip_str = "{:08b}{:08b}{:08b}{:08b}".format(oct1, oct2, oct3, oct4)
+bin_network_str = bin_ip_str[:mask] + "0" * (32 - mask)
 
-
-bin_ip_addr = '{:08b}{:08b}{:08b}{:08b}'.format(int(ip[0]), int(ip[1]), int(ip[2]), int(ip[3]))  # адрес хоста или сети в двоичном виде '00001010000000000000010111000011'
-str_ip_addr = bin_ip_addr[:mask] + '0' * (32 - mask)  # адрес сети в двоичном виде '00001010000000000000010111000000'
-
-net1, net2, net3, net4 = [  # преобразуем в адрес сети в виде чисел 10 0 5 192
-    int(str_ip_addr[0:8], 2),
-    int(str_ip_addr[8:16], 2),
-    int(str_ip_addr[16:24], 2),
-    int(str_ip_addr[24:32], 2),
+net1, net2, net3, net4 = [
+    int(bin_network_str[0:8], 2),
+    int(bin_network_str[8:16], 2),
+    int(bin_network_str[16:24], 2),
+    int(bin_network_str[24:32], 2),
 ]
 
-
-bin_mask = '1' * mask + '0' * (32 - mask) # преобразуем маску 28 в '11111111111111111111111111110000'
-
-m1, m2, m3, m4 = [  # преобразуем маску '11111111111111111111111111110000' в 255 255 255 240
+bin_mask = "1" * mask + "0" * (32 - mask)
+m1, m2, m3, m4 = [
     int(bin_mask[0:8], 2),
     int(bin_mask[8:16], 2),
     int(bin_mask[16:24], 2),
     int(bin_mask[24:32], 2),
 ]
 
-ip_template = '''
+ip_output = """
 Network:
-{0:<10}{1:<10}{2:<10}{3:<10}
-{0:08b}  {1:08b}  {2:08b}  {3:08b}
-'''
+{0:<8}  {1:<8}  {2:<8}  {3:<8}
+{0:08b}  {1:08b}  {2:08b}  {3:08b}"""
 
-mask_template = '''
+mask_output = """
 Mask:
-/{mask}
-{0:<10}{1:<10}{2:<10}{3:<10}
-{0:08b}  {1:08b}  {2:08b}  {3:08b}
-'''
+/{0}
+{1:<8}  {2:<8}  {3:<8}  {4:<8}
+{1:08b}  {2:08b}  {3:08b}  {4:08b}
+"""
 
-print(ip_template.format(net1, net2, net3, net4))
-print(mask_template.format(m1, m2, m3, m4, mask=mask))
+print(ip_output.format(net1, net2, net3, net4))
+print(mask_output.format(mask, m1, m2, m3, m4))

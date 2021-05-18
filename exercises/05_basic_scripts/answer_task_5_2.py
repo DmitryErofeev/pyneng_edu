@@ -25,11 +25,20 @@ Out[1]: '11111111111111111111111111110000'
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 """
 
-ip_addr = input('ввод IP-сети в формате: 10.1.1.0/24 ')
+network = input("Введите адрес сети в формате: 10.1.1.0/24: ")
 
-ip = ip_addr.split('/')[0].split('.')
-mask = int(ip_addr.split('/')[1])
-bin_mask = '1' * mask + '0' * (32 - mask)
+ip, mask = network.split("/")
+ip_list = ip.split(".")
+mask = int(mask)
+
+oct1, oct2, oct3, oct4 = [
+    int(ip_list[0]),
+    int(ip_list[1]),
+    int(ip_list[2]),
+    int(ip_list[3]),
+]
+
+bin_mask = "1" * mask + "0" * (32 - mask)
 m1, m2, m3, m4 = [
     int(bin_mask[0:8], 2),
     int(bin_mask[8:16], 2),
@@ -37,18 +46,17 @@ m1, m2, m3, m4 = [
     int(bin_mask[24:32], 2),
 ]
 
-ip_template = '''
+ip_output = """
 Network:
-{0:<10}{1:<10}{2:<10}{3:<10}
-{0:08b}  {1:08b}  {2:08b}  {3:08b}
-'''
+{0:<8}  {1:<8}  {2:<8}  {3:<8}
+{0:08b}  {1:08b}  {2:08b}  {3:08b}"""
 
-mask_template = '''
+mask_output = """
 Mask:
-/{mask}
-{0:<10}{1:<10}{2:<10}{3:<10}
-{0:08b}  {1:08b}  {2:08b}  {3:08b}
-'''
+/{0}
+{1:<8}  {2:<8}  {3:<8}  {4:<8}
+{1:08b}  {2:08b}  {3:08b}  {4:08b}
+"""
 
-print(ip_template.format(int(ip[0]),int(ip[1]),int(ip[2]),int(ip[3])))
-print(mask_template.format(m1, m2, m3, m4, mask=mask))
+print(ip_output.format(oct1, oct2, oct3, oct4))
+print(mask_output.format(mask, m1, m2, m3, m4))
