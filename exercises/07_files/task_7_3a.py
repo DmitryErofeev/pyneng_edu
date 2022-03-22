@@ -23,3 +23,17 @@
 Ограничение: Все задания надо выполнять используя только пройденные темы.
 
 """
+
+out = []
+with open("/home/nnm/pyneng_edu/exercises/07_files/CAM_table.txt") as f:
+    for line in f:
+        word = line.split()
+        if word and word[0].isdigit():
+            vlan, mac, _, port = word
+            out.append([int(vlan), mac, port])
+
+
+for vlan, mac, port in sorted(out):
+    print(f'{vlan:<9}{mac:<20}{port:5}')
+
+
